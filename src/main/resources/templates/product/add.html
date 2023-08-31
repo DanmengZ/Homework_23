@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>新增</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/static/fontawesome-free/css/all.min.css}">
+    <!-- DataTables -->
+    <!-- 时间控件 -->
+    <link rel="stylesheet" th:href="@{/static/daterangepicker/daterangepicker.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/static/adminLte/css/adminlte.min.css}">
+</head>
+<body>
+<!-- general form elements -->
+<div class="card card-primary">
+    <div class="card-header bg-white text-center">
+        <h3 class="card-title">新增</h3>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form method="post" th:action="@{/product/add}">
+        <div class="form-group">
+            <label for="productName">商品名称</label>
+            <input type="text" required="required" name="productName"  class="form-control" id="productName" >
+        </div>
+        <div class="form-group">
+            <label for="productName">生产厂家</label>
+            <input type="text" required="required" name="manufacturer"  class="form-control" id="manufacturer" >
+        </div>
+        <div class="form-group">
+            <label for="productName">生产日期</label>
+            <input  placeholder="时间" required id="productionDate" name="productionDate"  type="text" class="form-control"
+                    data-target="#productionDate"/>
+        </div>
+        <div class="form-group">
+            <label for="productName">型号</label>
+            <input type="text" required="required" name="model"  class="form-control" id="model" >
+        </div>
+        <div class="form-group">
+            <label for="productName">进货价</label>
+            <input type="text" required="required" name="purchasePrice"  class="form-control" id="purchasePrice" >
+        </div>
+        <div class="form-group">
+            <label for="productName">零售价格</label>
+            <input type="text" required="required" name="retailPrice"  class="form-control" id="retailPrice" >
+        </div>
+        <div class="form-group">
+            <label for="productName">数量</label>
+            <input type="text" required="required" name="quantity"  class="form-control" id="quantity" >
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-danger">增加一条</button>
+            <a onclick="location.href='index'" class="btn btn-primary">返回</a>
+        </div>
+    </form>
+</div>
+</body>
+<!-- jQuery -->
+<script th:src="@{/static/jquery/js/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/static/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/static/bs-custom-file-input/bs-custom-file-input.min.js}"></script>
+<script th:src="@{/static/overlayScrollbars/js/jquery.overlayScrollbars.min.js}"></script>
+<script th:src="@{/static/moment/moment.min.js}"></script>
+<script th:src="@{/static/daterangepicker/daterangepicker.js}"></script>
+<script th:src="@{/static/adminLte/js/adminlte.js}"></script>
+<script>
+
+    $(function () {
+        bsCustomFileInput.init();
+        //Date and time picker
+        $('#productionDate').daterangepicker({
+            timePicker: true,        // 选择时间
+            singleDatePicker: true,  // 只选一个
+            autoUpdateInput: true,
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+        })
+    })
+</script>
+<style>
+</style>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>管理首页</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/static/fontawesome-free/css/all.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/static/adminLte/css/adminlte.min.css}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" th:href="@{/static/overlayScrollbars/css/OverlayScrollbars.min.css}">
+</head>
+<body class="hold-transition sidebar-mini layout-fixed" data-panel-auto-height-mode="height">
+
+<!-- jQuery -->
+<script th:src="@{/static/jquery/js/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/static/jquery/js/jquery-ui.min.js}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/static/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- overlayScrollbars -->
+<script th:src="@{/static/overlayScrollbars/js/jquery.overlayScrollbars.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/static/adminLte/js/adminlte.js}"></script>
+<div  th:fragment="msg">
+<div th:if="${not #strings.isEmpty(session.msg)}">
+	<script>
+		//let path = "[[${session.basePath}]]" 
+		alert('[[${session.msg}]]');
+	</script>
+
+</div>
+<div th:if="${not #strings.isEmpty(session.loginMsg)}">
+	<script>
+		//let path = "[[${session.basePath}]]" 
+		alert('[[${session.loginMsg}]]');
+	</script>
+
+</div>
+<th:block th:inline="text"> [[${#session.removeAttribute('msg')}]]</th:block>
+<th:block th:inline="text"> [[${#session.removeAttribute('loginMsg')}]]</th:block>
+</div>
+</body>
+</html>

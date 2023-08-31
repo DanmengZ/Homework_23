@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sys.mapper.CustomerMapper">
+	<resultMap id="customerResultMap" type="Customer">
+  <id property="id" column="id"/>
+  <result property="userLevel" column="userLevel"/>
+  <result property="registerTime" column="registerTime"/>
+  <result property="totalConsumption" column="totalConsumption"/>
+  <result property="phoneNumber" column="phoneNumber"/>
+  <result property="email" column="email"/>
+  <association property="user" column="user_id" javaType="User">
+    <id property="id" column="user_id"/>
+    <result property="username" column="username"/>
+    <result property="password" column="password"/>
+    <result property="role" column="role"/>
+  </association>
+</resultMap>
+
+    <!-- 增加 -->
+    <insert id="add" parameterType="CustomerVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_customer (userLevel, totalConsumption, phoneNumber, email, userId)
+  VALUES (#{userLevel}, #{totalConsumption}, #{phoneNumber}, #{email}, #{userId})
+    </insert>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Integer">
+         DELETE FROM t_customer
+  WHERE id = #{id}
+    </delete>
+    <!-- 修改 -->
+    <update id="modify" parameterType="CustomerVO">
+        UPDATE t_customer
+  SET userLevel = #{userLevel}, registerTime = #{registerTime}, totalConsumption = #{totalConsumption},
+    phoneNumber = #{phoneNumber}, email = #{email}, userId = #{user.id}
+  WHERE id = #{id}
+    </update>
+    <!-- 查询 -->
+    <select id="query" resultMap="customerResultMap" parameterType="CustomerVO">
+         SELECT c.id, c.userLevel, c.registerTime, c.totalConsumption, c.phoneNumber, c.email,
+         u.id AS user_id, u.username, u.password, u.role
+  FROM t_customer c
+  INNER JOIN t_user u ON c.userId = u.id
+        <if test="id > 0">
+            and c.id = #{id}
+        </if>
+        <if test="username != null and username != ''">
+            and u.username like concat('%', #{username}, '%')
+        </if>
+    </select>
+    <!-- 修改 -->
+    <update id="modifyPwd" parameterType="CustomerVO">
+  update t_user left join t_customer on t_customer.userId = t_user.id
+SET t_user.`password` = #{password}
+where t_customer.id = #{id}
+    </update>
+    <select id="queryAccumulatedAmount" resultType="java.lang.Double" parameterType="java.lang.Integer">
+    select  SUM(t2.quantity * t3.retailPrice) as amount from t_customer t0 left join t_record t1 on t0.userId = t1.userId
+left join t_cart t2 on t1.id = t2.recordId
+left join t_product t3 on t2.productId = t3.id
+where t1.id = #{recordId}
+    </select>
+    <update id="modifyAccumulatedAmount" parameterType="CustomerVO">
+        UPDATE t_customer
+  SET totalConsumption = totalConsumption + #{totalConsumption}
+  WHERE userId = #{userId}
+    </update>
+</mapper>

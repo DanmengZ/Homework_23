@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/static/fontawesome-free/css/all.min.css}">
+    <!-- DataTables -->
+    <link rel="stylesheet" th:href="@{/static/datatables-bs4/css/dataTables.bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/static/datatables-responsive/css/responsive.bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/static/datatables-buttons/css/buttons.bootstrap4.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/static/adminLte/css/adminlte.min.css}">
+</head>
+<body>
+
+<form method="post" th:action="@{/customer/modify}">
+    <div class="card-body">
+        <input type="hidden" name="id" th:value="${customer.id}" />
+        <div class="form-group">
+            <label for="password">新密码</label>
+            <input type="text" name="password"  class="form-control" id="password" placeholder="新密码">
+        </div>
+    </div>
+    <!-- /.card-body -->
+
+    <div class="card-footer">
+        <button type="submit" class="btn btn-danger">修改数据</button>
+        <a onclick="location.href='index'" class="btn btn-primary">返回</a>
+    </div>
+</form>
+</body>
+<style>
+</style>
+</html>

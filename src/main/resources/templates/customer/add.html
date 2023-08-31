@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>新增</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/static/fontawesome-free/css/all.min.css}">
+    <!-- DataTables -->
+    <link rel="stylesheet" th:href="@{/static/datatables-bs4/css/dataTables.bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/static/datatables-responsive/css/responsive.bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/static/datatables-buttons/css/buttons.bootstrap4.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/static/adminLte/css/adminlte.min.css}">
+</head>
+<body>
+<!-- general form elements -->
+<div class="card card-primary">
+    <div class="card-header bg-white text-center">
+        <h3 class="card-title">新增</h3>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form method="post" th:action="@{/customer/add}">
+        <div class="card-body">
+            <div class="form-group">
+                <label for="customerName">店铺名称</label>
+                <input type="text" required="required" name="customerName" class="form-control" id="customerName" placeholder="店铺地址">
+            </div>
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-danger">增加一条</button>
+            <a onclick="location.href='index'" class="btn btn-primary">返回</a>
+        </div>
+    </form>
+</div>
+</body>
+<style>
+</style>
+</html>

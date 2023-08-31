@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sys.mapper.ProductMapper">
+    <!-- 增加 -->
+    <insert id="add" parameterType="ProductVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_product (productName, manufacturer, productionDate, model, purchasePrice, retailPrice, quantity)
+  VALUES (#{productName}, #{manufacturer}, #{productionDate}, #{model}, #{purchasePrice}, #{retailPrice}, #{quantity})
+    </insert>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from t_product where id = #{id}
+    </delete>
+    <!-- 修改 -->
+    <update id="modify" parameterType="ProductVO">
+        UPDATE t_product
+  SET productName = #{productName}, manufacturer = #{manufacturer}, productionDate = #{productionDate},
+    model = #{model}, purchasePrice = #{purchasePrice}, retailPrice = #{retailPrice}, quantity = #{quantity}
+  WHERE id = #{id}
+    </update>
+    <!-- 查询 -->
+    <select id="query" resultType="Product" parameterType="ProductVO">
+        select * from t_product where 1=1
+        <if test="id > 0">
+            and id = #{id}
+        </if>
+        <if test="productName != '' and productName != null">
+            and productName like concat('%', #{productName}, '%')
+        </if>
+    </select>
+    <update id="addNum" parameterType="ProductVO">
+        UPDATE t_product
+  SET quantity = quantity + #{quantity}
+  WHERE id = #{id}
+    </update>
+    <update id="subNum" parameterType="ProductVO">
+        UPDATE t_product
+  SET quantity = quantity - #{quantity}
+  WHERE id = #{id}
+    </update>
+</mapper>

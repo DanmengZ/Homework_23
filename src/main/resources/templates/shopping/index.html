@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>购物主页</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/static/fontawesome-free/css/all.min.css}">
+    <!-- DataTables -->
+    <link rel="stylesheet" th:href="@{/static/datatables-bs4/css/dataTables.bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/static/datatables-responsive/css/responsive.bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/static/datatables-buttons/css/buttons.bootstrap4.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/static/adminLte/css/adminlte.min.css}">
+
+</head>
+<body>
+<form name="dataTable" th:action="@{/customer/home}" method="post">
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12" style="text-align:center;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="form-inline">
+                            <div class="input-group">
+                                <input name="productName" id="productName" th:value="${productVO.productName}" class="form-control form-control-sidebar" style="width:600px;" type="search" placeholder="商品名称" aria-label="Search">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">
+                                    查询
+                                    </button>
+									
+                                </div>
+                                
+                            </div>
+                            <div class="input-group"  >
+
+                    <span style="font-size:1rem;font-weight:bolder;" th:text="${'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;欢迎 ' + session.user.username+' 登录'}"></span>
+                            </div>
+                            <div class="input-group" style="margin-left:35%;" >
+                            <a class="nav-link" role="button" th:onclick="|javascript:location.href='@{/sys/checkRecord}';|">
+				                    查看消费记录
+				                </a>
+                            	<a class="nav-link" role="button" th:onclick="|javascript:location.href='@{/sys/logout}';|">
+				                    退出登录
+				                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>商品名称</th>
+                                <th>生产厂家</th>
+                                <th>生产日期</th>
+                                <th>型号</th>
+                                <th>进货价</th>
+                                <th>零售价格</th>
+                                <th>数量</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="product : ${pageInfo.getList()}">
+                                <th scope="row"><span th:text="${product.id}"></span></th>
+                                <td><span th:text="${product.productName}"></span></td>
+                                <td><span th:text="${product.manufacturer}"></span></td>
+                                <td><span th:text="${#dates.format(product.productionDate, 'yyyy-MM-dd')}"></td>
+                                <td><span th:text="${product.model}"></span></td>
+                                <td><span th:text="${product.purchasePrice}"></span></td>
+                                <td><span th:text="${product.retailPrice}"></span></td>
+                                <td><span th:text="${product.quantity}"></span></td>
+                                <td>
+                                    <a class="btn btn-primary" th:onclick="addCart([[${product.id}]])">加入购物车</a>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer clearfix">
+        <div class="text-center">
+            当前第 [[${pageInfo.pageNum}]]页，共 [[${pageInfo.pages}]] 页， 共 [[${pageInfo.total}]] 条记录
+        </div>
+        <ul class="pagination m-0 float-right">
+            <li class="page-item">
+                <!-- th:href="'index?pageNum=1'" -->
+                <a class="page-link" href="#" onclick="page(1)">首页</a>
+            </li>
+            <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
+                <!--th:href="'index?pageNum='+${pageInfo.prePage}"-->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${pageInfo.prePage}+')'">
+                    <i class="ace-icon fa fa-angle-double-left"></i>
+                </a>
+            </li>
+            <!--遍历条数-->
+            <li class="page-item" th:each="nav:${pageInfo.navigatepageNums}">
+                <!-- th:href="'index?pageNum='+${nav}" -->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${nav}+')'" th:text="${nav}" th:if="${nav != pageInfo.pageNum}"></a>
+                <span class="page-link" style="font-weight: bold;background: #6faed9;" th:if="${nav == pageInfo.pageNum}" th:text="${nav}" ></span>
+            </li>
+
+            <li class="page-item" th:if="${pageInfo.hasNextPage}">
+                <!-- th:href="'index?pageNum='+${pageInfo.nextPage}" -->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${pageInfo.nextPage}+')'">
+                    <i class="ace-icon fa fa-angle-double-right"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <!-- th:href="'index?pageNum='+${pageInfo.pages}" -->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${pageInfo.pages}+')'">尾页</a>
+            </li>
+        </ul>
+    </div>
+    <input type="hidden" name="pageNum" />
+    <input type="hidden" name="direct" id="direct" />
+</section>
+<div class="modal fade" id="viewDialog" role="viewDialog" aria-hidden="true">
+        <div class="modal-dialog modal-full">
+           <div class="modal-content">
+              <div class="modal-header" style="padding:10px !important;padding-bottom:5px;border-bottom:0px !important;">
+			   	<input name="quantity" id="quantity"  class="form-control form-control-sidebar"  type="search" placeholder="请输入数量" >
+	         </div>
+	         <input type="hidden" id="product_id" name="product_id" />
+	         <input type="hidden" id="orginCartId" name="orginCartId" />
+              <div class="modal-body mask-layer-imgbox" style="padding-top:0px;text-align:center;"><!-- height:480px;width:600px -->
+                 <button type="button" onclick="submitCart()" class="btn btn-danger">确定</button>
+                 <button type="button" class="btn btn-primary" onclick="cancel()">取消</button>
+              </div>
+           </div>  
+           <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+     </div>
+<div class="modal fade" id="VD" role="viewDialog" aria-hidden="true">
+        <div class="modal-dialog modal-full">
+           <div class="modal-content">
+              <div class="modal-header" style="padding:10px !important;padding-bottom:5px;border-bottom:0px !important;text-align:center;">
+              		<div class="input-group form-inline"  >
+              			<label for="customerName">支付宝支付</label>
+              			<input type="radio" checked="checked" name="payType" value="1" />
+              		</div>
+              		<div class="input-group form-inline"  >
+              			<label for="customerName">微信支付</label>
+              			<input type="radio" name="payType" value="2" />
+              		</div>
+              		<div class="input-group form-inline"  >
+              			<label for="customerName">银联支付</label>
+              			<input type="radio" name="payType" value="3" />
+              		</div>
+	         </div>
+              <div class="modal-body mask-layer-imgbox" style="padding-top:0px;text-align:center;"><!-- height:480px;width:600px -->
+                 <button type="button" onclick="submitCart1()" class="btn btn-danger">确定</button>
+                 <button type="button" class="btn btn-primary" onclick="cancel1()">取消</button>
+              </div>
+           </div>  
+           <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+     </div>
+     <section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12" style="text-align:center;">
+                <div class="card">
+                    <div class="card-header">
+                        	购物车信息
+                    </div>
+                    <div class="card-body">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>商品名称</th>
+                                <th>商品数量</th>
+                                <th>商品价格</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="cart : ${carts}">
+                                <th scope="row"><span th:text="${cart.id}"></span></th>
+                                <td><span th:text="${cart.productName}"></span></td>
+                                <td><span th:text="${cart.quantity}"></span></td>
+                                <td><span th:text="${cart.retailPrice}"></span></td>
+                                <td>
+                                    <a class="btn btn-danger" th:onclick="subCart([[${cart.productId}]],[[${cart.id}]])">移除购物车</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<input type="hidden" name="settlement" id="settlement" /> 
+<div class="card-footer clearfix" style="text-align:center;">
+	总金额 : <span th:text="${totalAmount}"></span> 元 <a onclick="settlement()" class="btn btn-primary">结算</a>
+</div>
+</form>
+
+
+<script th:src="@{/static/jquery/js/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/static/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/static/bs-custom-file-input/bs-custom-file-input.min.js}"></script>
+<script th:src="@{/static/overlayScrollbars/js/jquery.overlayScrollbars.min.js}"></script>
+<script th:src="@{/static/moment/moment.min.js}"></script>
+<script th:src="@{/static/daterangepicker/daterangepicker.js}"></script>
+<script th:src="@{/static/adminLte/js/adminlte.js}"></script>
+<script>
+    /**
+     * 分页
+     */
+    function page(currentPage){
+        document.dataTable.pageNum.value = currentPage
+        document.dataTable.submit()
+    }
+</script>
+<script>
+	function deleteIt(id){
+		if(!confirm("确定要删除吗？")){
+            return ;
+        }
+		location.href = "delete?id=" + id;
+	}
+	function addCart(id) {
+		$('#viewDialog').modal({
+		     backdrop:"static",
+		     keyboard:false,
+		     show: true
+		});
+		document.getElementById("product_id").value = id;
+		document.getElementById("direct").value = "+";
+	}
+	
+	function subCart(productId,cartId) {
+		$('#viewDialog').modal({
+		     backdrop:"static",
+		     keyboard:false,
+		     show: true
+		});
+		document.getElementById("product_id").value = productId;
+		document.getElementById("direct").value = "-";
+		document.getElementById("orginCartId").value = cartId;
+	}
+	
+	function cancel(){
+		document.getElementById("product_id").value = ''
+		document.getElementById("quantity").value = ''
+		document.getElementById("direct").value = "";
+		document.getElementById("orginCartId").value = ''
+		$('#viewDialog').modal("hide");
+		
+	}
+	function cancel1(){
+		document.getElementById("settlement").value = ''
+		$('#VD').modal("hide");
+		
+	}
+	function submitCart1(){
+		document.dataTable.pageNum.value = [[${pageInfo.pageNum}]]
+		document.dataTable.submit()
+	}
+	function submitCart(){
+		document.dataTable.pageNum.value = [[${pageInfo.pageNum}]]
+		document.dataTable.submit()
+	}
+	function settlement(){
+		if(!confirm("确定要结算吗？")){
+            return ;
+        }
+		if([[${totalAmount}]] == 0){
+			alert("结算金额不能等于0");
+			return;
+		}
+		document.getElementById("settlement").value = 'settlement'
+		$('#VD').modal({
+		     backdrop:"static",
+		     keyboard:false,
+		     show: true
+		});
+		//document.getElementById("settlement").value = 'settlement'
+		//document.dataTable.submit()
+	}
+</script>
+
+
+<div th:insert="commons/common::msg"></div>
+
+</body>
+</html>

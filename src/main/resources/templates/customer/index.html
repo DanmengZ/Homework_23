@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>店铺管理</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/static/fontawesome-free/css/all.min.css}">
+    <!-- DataTables -->
+    <link rel="stylesheet" th:href="@{/static/datatables-bs4/css/dataTables.bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/static/datatables-responsive/css/responsive.bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/static/datatables-buttons/css/buttons.bootstrap4.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/static/adminLte/css/adminlte.min.css}">
+
+</head>
+<body>
+<form name="dataTable" th:action="@{index}" method="post">
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="form-inline">
+                            <div class="input-group" data-widget="sidebar-search">
+                                <input name="username" id="username" th:value="${customerVO.username}" class="form-control form-control-sidebar" type="search" placeholder="客户姓名" aria-label="Search">
+                                <div class="input-group-append">
+                                    <button class="btn btn-sidebar">
+                                        <i class="fas fa-search fa-fw"></i>
+                                    </button>
+
+                                </div>
+                                <!-- <div class="input-group-append ">
+                                    <a class="btn btn-danger" th:href="@{toAdd}">新增</a>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>用户名</th>
+                                <th>用户级别</th>
+                                <th>用户注册时间</th>
+                                <th>客户累计消费总金额</th>
+                                <th>用户手机号</th>
+                                <th>用户邮箱</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="customer : ${pageInfo.getList()}">
+                                <th scope="row"><span th:text="${customer.id}"></span></th>
+                                <td><span th:text="${customer.user.username}"></span></td>
+                                <td><span th:text="${customer.userLevel}"></span></td>
+                                <td><span th:text="${customer.registerTime}"></span></td>
+                                <td><span th:text="${customer.totalConsumption}"></span></td>
+                                <td><span th:text="${customer.phoneNumber}"></span></td>
+                                <td><span th:text="${customer.email}"></span></td>
+                                <td>
+                                    <a class="btn btn-primary" th:href="@{toModify(id=${customer.id})}">重置密码</a>
+                                    <a class="btn btn-danger" th:onclick="deleteIt('[[${customer.id}]]')">删除</a>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer clearfix">
+        <div class="text-center">
+            当前第 [[${pageInfo.pageNum}]]页，共 [[${pageInfo.pages}]] 页， 共 [[${pageInfo.total}]] 条记录
+        </div>
+        <ul class="pagination m-0 float-right">
+            <li class="page-item">
+                <!-- th:href="'index?pageNum=1'" -->
+                <a class="page-link" href="#" onclick="page(1)">首页</a>
+            </li>
+            <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
+                <!--th:href="'index?pageNum='+${pageInfo.prePage}"-->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${pageInfo.prePage}+')'">
+                    <i class="ace-icon fa fa-angle-double-left"></i>
+                </a>
+            </li>
+            <!--遍历条数-->
+            <li class="page-item" th:each="nav:${pageInfo.navigatepageNums}">
+                <!-- th:href="'index?pageNum='+${nav}" -->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${nav}+')'" th:text="${nav}" th:if="${nav != pageInfo.pageNum}"></a>
+                <span class="page-link" style="font-weight: bold;background: #6faed9;" th:if="${nav == pageInfo.pageNum}" th:text="${nav}" ></span>
+            </li>
+
+            <li class="page-item" th:if="${pageInfo.hasNextPage}">
+                <!-- th:href="'index?pageNum='+${pageInfo.nextPage}" -->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${pageInfo.nextPage}+')'">
+                    <i class="ace-icon fa fa-angle-double-right"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <!-- th:href="'index?pageNum='+${pageInfo.pages}" -->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${pageInfo.pages}+')'">尾页</a>
+            </li>
+        </ul>
+    </div>
+    <input type="hidden" name="pageNum" />
+</section>
+</form>
+<script>
+    /**
+     * 分页
+     */
+    function page(currentPage){
+        document.dataTable.pageNum.value = currentPage
+        document.dataTable.submit()
+    }
+</script>
+<script>
+	function deleteIt(id){
+		if(!confirm("确定要删除吗？")){
+            return ;
+        }
+		location.href = "delete?id=" + id;
+	}
+</script>
+<div th:insert="commons/common::msg"></div>
+</body>
+</html>

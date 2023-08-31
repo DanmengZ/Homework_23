@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>消费记录</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/static/fontawesome-free/css/all.min.css}">
+    <!-- DataTables -->
+    <link rel="stylesheet" th:href="@{/static/datatables-bs4/css/dataTables.bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/static/datatables-responsive/css/responsive.bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/static/datatables-buttons/css/buttons.bootstrap4.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/static/adminLte/css/adminlte.min.css}">
+
+</head>
+<body>
+<form name="dataTable" th:action="@{index}" method="post">
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="form-inline">
+                            
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>纪录id</th>
+                                <th>消费人员</th>
+                                <th>消费日期</th>
+                                <th>总金额</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="record : ${pageInfo.getList()}">
+                                <th scope="row"><span th:text="${record.id}"></span></th>
+                                <td><span th:text="${record.username}"></span></td>
+                                <td><span th:text="${record.recordTime}"></span></td>
+                                <td><span th:text="${record.getTotalAmount() + ' 元'}"></span></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer clearfix">
+        <div class="text-center">
+            当前第 [[${pageInfo.pageNum}]]页，共 [[${pageInfo.pages}]] 页， 共 [[${pageInfo.total}]] 条记录
+        </div>
+        <ul class="pagination m-0 float-right">
+            <li class="page-item">
+                <!-- th:href="'index?pageNum=1'" -->
+                <a class="page-link" href="#" onclick="page(1)">首页</a>
+            </li>
+            <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
+                <!--th:href="'index?pageNum='+${pageInfo.prePage}"-->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${pageInfo.prePage}+')'">
+                    <i class="ace-icon fa fa-angle-double-left"></i>
+                </a>
+            </li>
+            <!--遍历条数-->
+            <li class="page-item" th:each="nav:${pageInfo.navigatepageNums}">
+                <!-- th:href="'index?pageNum='+${nav}" -->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${nav}+')'" th:text="${nav}" th:if="${nav != pageInfo.pageNum}"></a>
+                <span class="page-link" style="font-weight: bold;background: #6faed9;" th:if="${nav == pageInfo.pageNum}" th:text="${nav}" ></span>
+            </li>
+
+            <li class="page-item" th:if="${pageInfo.hasNextPage}">
+                <!-- th:href="'index?pageNum='+${pageInfo.nextPage}" -->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${pageInfo.nextPage}+')'">
+                    <i class="ace-icon fa fa-angle-double-right"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <!-- th:href="'index?pageNum='+${pageInfo.pages}" -->
+                <a class="page-link" href="#" th:onclick="'javascript:page('+${pageInfo.pages}+')'">尾页</a>
+            </li>
+        </ul>
+    </div>
+    <input type="hidden" name="pageNum" />
+</section>
+</form>
+<script>
+    /**
+     * 分页
+     */
+    function page(currentPage){
+        document.dataTable.pageNum.value = currentPage
+        document.dataTable.submit()
+    }
+</script>
+<script>
+	
+</script>
+<div th:insert="commons/common::msg"></div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sys.mapper.CartMapper">
+    <!-- 增加 -->
+    <insert id="add" parameterType="CartVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_cart (productId, quantity, userId, recordId)
+  VALUES (#{productId}, #{quantity}, #{userId}, #{recordId})
+    </insert>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from t_cart where id = #{id}
+    </delete>
+    <!-- 修改 -->
+    <update id="modify" parameterType="CartVO">
+        update t_cart
+        <trim prefix="set" suffixOverrides=",">
+        <if test="recordId !=null and recordId > 0">
+              recordId =#{recordId}
+        </if>
+        </trim>
+        where 1=1
+        and  userId = #{userId}
+        and  recordId = 0
+    </update>
+    <!-- 查询用户 -->
+    <select id="query" resultType="Cart" parameterType="CartVO">
+        SELECT c.id, c.productId, p.productName, c.quantity, p.retailPrice
+  FROM t_cart c
+  INNER JOIN t_product p ON c.productId = p.id
+  WHERE 1=1
+  <if test="userId > 0">
+          and  c.userId = #{userId}
+  </if>
+  <if test="productId > 0">
+          and  c.productId = #{productId}
+  </if>
+  <if test="id > 0">
+          and  c.id = #{id}
+  </if>
+  
+  and c.recordId = #{recordId}
+    </select>
+    
+    <!-- 加入购物车 -->
+    <update id="addCart" parameterType="CartVO">
+        update t_cart
+        <trim prefix="set" suffixOverrides=",">
+        <if test="quantity !=null and quantity > 0">
+              quantity = quantity + #{quantity}
+        </if>
+        </trim>
+        where userId = #{userId}
+        and productId = #{productId}
+    </update>
+    
+    <!-- 移除购物车 -->
+    <update id="subCart" parameterType="CartVO">
+        update t_cart
+        <trim prefix="set" suffixOverrides=",">
+        <if test="quantity !=null and quantity > 0">
+              quantity = quantity - #{quantity}
+        </if>
+        </trim>
+        where userId = #{userId}
+        and productId = #{productId}
+    </update>
+</mapper>

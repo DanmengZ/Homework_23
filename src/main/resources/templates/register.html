@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>AdminLTE 3 | Registration Page</title>
+
+	<!-- Google Font: Source Sans Pro -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" th:href="@{/static/fontawesome-free/css/all.min.css}">
+	<!-- Theme style -->
+	<link rel="stylesheet" th:href="@{/static/adminLte/css/adminlte.min.css}">
+	<!-- overlayScrollbars -->
+	<link rel="stylesheet" th:href="@{/static/overlayScrollbars/css/OverlayScrollbars.min.css}">
+</head>
+<body class=" register-page">
+<div class="register-box">
+	<div class="register-logo">
+		<a href="#"><b>系统注册</b></a>
+	</div>
+
+	<div class="card">
+		<div class="card-body register-card-body">
+			<p class="login-box-msg">请填写注册信息</p>
+			<form action="register" method="post">
+				<div class="input-group mb-3">
+					<input id="username" required="required" type="text" name="username" class="form-control" placeholder="用户名">
+					<div class="input-group-append">
+						<div class="input-group-text">
+							<span class="fas fa-user"></span>
+						</div>
+					</div>
+				</div>
+				<div class="input-group mb-3">
+					<input id="password" required="required" type="password" name="password" class="form-control" placeholder="密码">
+					<div class="input-group-append">
+						<div class="input-group-text">
+							<span class="fas fa-lock"></span>
+						</div>
+					</div>
+				</div>
+				<div class="input-group mb-3">
+					<input id="phoneNumber" required="required" type="phoneNumber" name="phoneNumber" class="form-control" placeholder="手机号">
+					<div class="input-group-append">
+						<div class="input-group-text">
+							<span class="fas fa-lock"></span>
+						</div>
+					</div>
+				</div>
+				<div class="input-group mb-3">
+					<input id="email" required="required" type="email" name="email" class="form-control" placeholder="邮箱">
+					<div class="input-group-append">
+						<div class="input-group-text">
+							<span class="fas fa-lock"></span>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-6">
+						<a onclick="reg()" class="btn btn-primary btn-block">注册</a>
+					</div>
+					<div class="col-6">
+						<a th:onclick="|javascript:location.href='@{/sys/login}';|" class="btn btn-primary btn-block">返回</a>
+					</div>
+				</div>
+			</form>
+
+		</div>
+		<!-- /.form-box -->
+	</div><!-- /.card -->
+</div>
+</body>
+<script type="text/javascript">
+	function reg(){
+		let username = document.getElementById("username").value;
+		let password = document.getElementById("password").value;
+		let phoneNumber = document.getElementById("phoneNumber").value;
+		let email = document.getElementById("email").value;
+		const strongRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%+.]).{8,20}$/;
+		if(username == '' || password == '' || phoneNumber == '' || email == ''){
+			alert("信息不能为空");
+			return;
+		}
+		if(username.length < 5){
+			alert("用户名要大于5位");
+			return;
+		}
+		if(password.length < 8){
+			alert("密码要大于8位");
+			return;
+		}
+		if(!strongRegex.test(password)){
+			alert("密码要包含大写字母、小写字母、数字和特殊符号");
+			return;
+		}
+		document.forms[0].submit();
+	}
+</script>
+</html>
